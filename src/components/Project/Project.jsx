@@ -12,6 +12,8 @@ export default function Project() {
       setProjects(response.data.projects);
     });
   }, []);
+
+  console.log(projects);
   useEffect(() => {
     if (selectedProject) {
       document.body.style.overflow = "hidden";
@@ -150,17 +152,17 @@ export default function Project() {
 
               
 
-              <div className="py-2">
+              {selectedProject.challenges && (
+                <div className="py-2">
                 <h4 className="text-xs font-mono uppercase tracking-wider text-foreground mb-2">
                   Desafios técnicos
                 </h4>
                 <span className="text-muted-foreground leading-relaxed text-sm whitespace-pre-line">
-                  implementação de multi-tenancy, controle de transições de
-                  status das ordens de serviço, validação das regras de
-                  pagamento, controle financeiro e organização do domínio para
-                  facilitar a evolução do sistema.
+                  
+                  {selectedProject.challenges}
                 </span>
               </div>
+              )}
 
             </div>
 

@@ -31,6 +31,7 @@ export default function ProjectPage() {
   const [form, setForm] = useState({
     title: "",
     description: "",
+    challenges: "",
     slug: "",
     featured: true,
     repositoryUrl: "",
@@ -42,6 +43,7 @@ export default function ProjectPage() {
     setForm({
       title: "",
       description: "",
+      challenges: "",
       slug: "",
       featured: "",
       repositoryUrl: "",
@@ -62,11 +64,14 @@ export default function ProjectPage() {
     loadProjects();
   }, []);
 
+  console.log(projects)
+
   const handleEditing = (project) => {
     setForm({
       id: project.id,
       title: project.title,
       description: project.description,
+      challenges: project.challenges,
       slug: project.slug,
       status: project.status,
       featured: project.featured,
@@ -96,7 +101,6 @@ export default function ProjectPage() {
       setOpen(false);
       clearForm();
     } catch (error) {
-      console.log(error);
       toast.error(
         error.response?.data?.message ?? "Erro ao excluir o projeto.",
       );
@@ -127,7 +131,6 @@ export default function ProjectPage() {
       setEditingId(null);
       setOpen(false);
     } catch (error) {
-      console.log(error.response.data.message);
       toast.error(error.response.data.message);
     } finally {
       setLoading(false);
@@ -269,6 +272,20 @@ export default function ProjectPage() {
                   className="min-h-20 w-full border border-border bg-background/60 
               rounded-md px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 
               focus:ring-primary/30 transition-colors"
+                ></textarea>
+              </div>
+
+               <div className="flex flex-col">
+                <span className="text-xs text-muted-foreground mb-1.5">
+                  Desafios
+                </span>
+                <textarea
+                  onChange={handleChange}
+                  name="challenges"
+                  value={form.challenges}
+                  className="min-h-20 w-full border border-border bg-background/60 
+                    rounded-md px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 
+                    focus:ring-primary/30 transition-colors"
                 ></textarea>
               </div>
 
