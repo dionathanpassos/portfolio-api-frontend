@@ -13,7 +13,7 @@ export default function Hero() {
     useEffect(() => {
       getPortfilio().then(response => {
         setSocial(response?.data.social),
-        setHero(response.data.hero)
+        setHero(response?.data.hero)
       });
     }, []);
 
@@ -29,7 +29,7 @@ export default function Hero() {
         </div>
 
         <h1 className="text-center text-4xl md:text-7xl text-foreground font-semibold tracking-tight leading-[1.05] animate-fade-up">
-          {hero.name}
+          {hero?.name}
           <span className="text-center block text-3xl md:text-7xl text-gradient font-semibold mt-2 pb-2">
             {hero.position  }
           </span>
@@ -37,11 +37,11 @@ export default function Hero() {
 
         <p className="mt-6 text-muted-foreground text-sm md:text-md animate-fade-up tracking-tight">
           <span className="text-primary mr-1">$</span>
-          {hero.eyebrow}
+          {hero?.eyebrow}
         </p>
 
         <p className="text-muted-foreground mt-6 max-w-xl text-sm md:text-lg leading-relaxed animate-fade-up text-center">
-          {hero.introdution}
+          {hero?.introdution}
         </p>
 
         <div className="mt-10 flex flex-col items-center md:flex-row flex-wrap gap-3 animate-fade-up">
