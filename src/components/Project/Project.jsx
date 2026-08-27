@@ -5,7 +5,6 @@ import { getPortfilio } from "../../services/porfolioService";
 
 export default function Project() {
   const [projects, setProjects] = useState([]);
-  // Estado para armazenar o projeto selecionado para o modal
   const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
@@ -13,9 +12,19 @@ export default function Project() {
       setProjects(response.data.projects);
     });
   }, []);
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedProject]);
 
   return (
-    <section id="projects" className="py-24">
+    <section id="projects" className="overflow-hidden py-18">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-12 max-w-2xl">
           <p className="font-mono text-xs uppercase tracking-widest text-primary mb-3">
@@ -36,10 +45,9 @@ export default function Project() {
               key={project.id}
               className="flex flex-col relative group card-surface rounded-xl p-6 hover-lift overflow-hidden hover:border-primary/30 transition-colors "
             >
-              <div className="absolute top-0 right-0 h-0.5 w-24 bg-gradient-to-l from-primary to-transparent"></div>
+              <div className="absolute top-0 right-0 h-0.5 w-24 bg-linear-to-l from-primary to-transparent"></div>
 
-              {/* Ao clicar no título, também abre o modal */}
-              <h3 
+              <h3
                 onClick={() => setSelectedProject(project)}
                 className="text-lg text-foreground font-semibold tracking-tight mb-2 transition-colors hover:text-primary hover:underline cursor-pointer"
               >
@@ -81,13 +89,12 @@ export default function Project() {
                     Demo
                   </a>
                 )}
-                {/* Botão configurado para abrir o modal salvando o projeto atual no estado */}
                 <button
                   onClick={() => setSelectedProject(project)}
                   className="inline-flex gap-2 items-center text-primary bg-primary/10 text-xs font-medium px-3 py-2 rounded-md border border-primary/30 transition-colors hover:bg-primary/20 cursor-pointer"
                 >
                   <Info className="w-4 h-4" />
-                  Mais Detalhes
+                  Detalhes
                 </button>
               </div>
             </article>
@@ -95,35 +102,33 @@ export default function Project() {
         </div>
       </div>
 
-      {/* Renderização Condicional do Modal */}
       {selectedProject && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-600/60 backdrop-blur-xs"
           onClick={() => setSelectedProject(null)}
         >
-          <div 
-            className="relative w-full max-w-2xl rounded-xl border border-border bg-background p-6 shadow-2xl transition-all max-h-[85vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()} 
+          <div
+            className="relative w-full max-w-4xl rounded-xl border border-border bg-background shadow-2xl transition-all max-h-[85vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
           >
-          
-            <button 
+            <button
               onClick={() => setSelectedProject(null)}
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10"
             >
               <X className="w-5 h-5" />
             </button>
-     
-            <div className="mb-4">
+
+            <div className="p-6 pb-4 border-b border-border">
               <p className="font-mono text-xs uppercase tracking-widest text-primary mb-1">
                 Detalhes do Projeto
               </p>
-              <h3 className="text-2xl font-semibold tracking-tight text-foreground">
+              <h3 className="text-xl font-semibold tracking-tight text-foreground pr-6">
                 {selectedProject.title}
               </h3>
             </div>
 
-            <div className="space-y-4">
-              <p className="text-muted-foreground leading-relaxed text-sm whitespace-pre-line ">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-track-background scrollbar-thumb-border hover:scrollbar-thumb-primary/60">
+              <p className="text-muted-foreground leading-relaxed text-sm whitespace-pre-line">
                 {selectedProject.description}
               </p>
 
@@ -142,18 +147,24 @@ export default function Project() {
                   ))}
                 </div>
               </div>
-               <div className="py-2">
+
+              
+
+              <div className="py-2">
                 <h4 className="text-xs font-mono uppercase tracking-wider text-foreground mb-2">
                   Desafios técnicos
                 </h4>
                 <span className="text-muted-foreground leading-relaxed text-sm whitespace-pre-line">
-                  implementação de multi-tenancy, controle de transições de status das ordens de serviço, 
-                  validação das regras de pagamento, controle financeiro e organização do domínio para facilitar a evolução do sistema.
+                  implementação de multi-tenancy, controle de transições de
+                  status das ordens de serviço, validação das regras de
+                  pagamento, controle financeiro e organização do domínio para
+                  facilitar a evolução do sistema.
                 </span>
-
               </div>
+
             </div>
-            <div className="mt-8 pt-4 border-t border-border flex items-center justify-end gap-3">
+
+            <div className="p-6 pt-4 border-t border-border flex items-center justify-end gap-3 bg-background rounded-b-xl">
               <a
                 href={selectedProject.repositoryUrl}
                 target="_blank"

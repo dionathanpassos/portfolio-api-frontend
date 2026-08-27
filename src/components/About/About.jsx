@@ -14,7 +14,7 @@ export default function About() {
   }, []);
 
   return (
-    <section id="about" className="py-24">
+    <section id="about" className="overflow-hidden py-18">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-12 max-w-2xl">
           <p className="font-mono text-xs uppercase tracking-widest text-primary mb-3">

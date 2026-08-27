@@ -21,7 +21,6 @@ export default function Contact() {
     getPortfilio().then((response) => {
       setSocial(response?.data.social);
     });
-   
   }, [loading]);
 
   const handleChange = (e) => {
@@ -40,17 +39,20 @@ export default function Contact() {
     try {
       setLoading(true);
       await sendContact(form);
-      toast.success("Mensagem enviado com sucesso!")
+      toast.success("Mensagem enviado com sucesso!");
       setForm(initialForm);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Não foi possível enviar a sua mensagem, tente novamente mais tarde!");
+      toast.error(
+        error.response?.data?.message ||
+          "Não foi possível enviar a sua mensagem, tente novamente mais tarde!",
+      );
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <section id="contact" className="py-24">
+    <section id="contact" className="overflow-hidden py-18">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-12 max-w-2xl">
           <p className="font-mono text-xs uppercase tracking-widest text-primary mb-3">
@@ -64,7 +66,7 @@ export default function Contact() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-5 gap-8">
+        <div className="grid md:grid-cols-5 grid-cols-1 gap-8">
           <form
             onSubmit={handleSubmit}
             className="md:col-span-3 card-surface p-6 rounded-xl"
@@ -149,9 +151,7 @@ export default function Contact() {
                   <p className="font-mono text-xs uppercase text-muted-foreground">
                     Email
                   </p>
-                  <p className="text-foreground text-sm">
-                    {social.email}
-                  </p>
+                  <p className="text-foreground text-xs md:text-sm">{social.email}</p>
                 </div>
               </div>
               <span className="text-muted-foreground group-hover:text-primary transition-colors">
@@ -172,7 +172,7 @@ export default function Contact() {
                   <p className="font-mono text-xs uppercase text-muted-foreground">
                     Github
                   </p>
-                  <p className="text-foreground text-sm">
+                  <p className="text-foreground text-xs md:text-sm">
                     &#64;devdionathanpassos
                   </p>
                 </div>
@@ -195,7 +195,7 @@ export default function Contact() {
                   <p className="font-mono text-xs uppercase text-muted-foreground">
                     Linkedin
                   </p>
-                  <p className="text-foreground text-sm">in/dionathanpassos</p>
+                  <p className="text-foreground text-xs md:text-sm">in/dionathanpassos</p>
                 </div>
               </div>
               <span className="text-muted-foreground group-hover:text-primary transition-colors">

@@ -1,20 +1,15 @@
 import { useEffect, useState } from "react";
 import { getPortfilio } from "../../services/porfolioService";
-// Importação dos ícones do Lucide correspondentes à imagem
 import { Server, Database, Cloud, Code, Wrench } from "lucide-react";
 
 export default function Stack() {
   const [skills, setSkills] = useState([]);
-  const [about, setAbout] = useState([]);
 
   useEffect(() => {
     getPortfilio().then((response) => {
       setSkills(response.data.skills);
-      setAbout(response.data.about);
     });
   }, []);
-
-  // Definição das categorias com cores temáticas e ícones do Lucide
   const categories = [
     { 
       id: "BACKEND", 
@@ -47,12 +42,8 @@ export default function Stack() {
       color: "text-amber-400 bg-amber-950/40 border-amber-800/40" 
     },
   ];
-
-  // Função para gerar as iniciais idênticas à imagem (Ex: "Spring Boot" -> "SB")
   const getInitials = (name) => {
     if (!name) return "";
-    
-    // Tratamentos para strings específicas que possuem barras ou caracteres especiais
     if (name.includes("/")) {
       const parts = name.split("/");
       return (parts[0].trim().charAt(0) + parts[1].trim().charAt(0)).substring(0, 3);
@@ -66,7 +57,7 @@ export default function Stack() {
   };
 
   return (
-    <section id="stack" className="py-24 ">
+    <section id="stack" className="overflow-hidden py-18">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-14 max-w-3xl">
           <p className="font-mono text-xs uppercase tracking-widest text-primary mb-3">

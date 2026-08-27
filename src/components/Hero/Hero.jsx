@@ -18,7 +18,7 @@ export default function Hero() {
     }, []);
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-32 pb-24 md:pt-44 md:pb-36">
+    <section id="hero" className="relative overflow-hidden py-24 md:py-36 min-h-screen">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-50 left-1/2 h-175 w-175 -translate-x-1/2 rounded-full bg-cyan-400/5 blur-3xl"></div>
       </div>
@@ -28,14 +28,14 @@ export default function Hero() {
           <span>status: disponível para projetos</span>
         </div>
 
-        <h1 className="text-center text-4xl md:text-7xl text-foreground font-semibold tracking-tight leading-[1.05] animate-fade-up">
+        <h1 className="text-center text-3xl sm:texte-3xl md:text-5xl lg:text-7xl text-foreground font-semibold tracking-tight leading-[1.05] animate-fade-up truncate">
           {hero?.name}
-          <span className="text-center block text-3xl md:text-7xl text-gradient font-semibold mt-2 pb-2">
+          <span className="text-center block text-3xl sm:texte-3xl md:text-5xl lg:text-7xl text-gradient font-semibold mt-2 pb-2">
             {hero?.position  }
           </span>
         </h1>
 
-        <p className="mt-6 text-muted-foreground text-sm md:text-md animate-fade-up tracking-tight">
+        <p className="md:mt-6 mt-3 text-muted-foreground text-sm md:text-md animate-fade-up tracking-tight">
           <span className="text-primary mr-1">$</span>
           {hero?.eyebrow}
         </p>
@@ -74,7 +74,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="mt-16 max-w-lg card-surface glow-cyan rounded-lg p-4 font-mono text-xs animate-fade-up">
+        <div className="mt-16 max-w-lg card-surface glow-cyan rounded-lg p-4 font-mono text-xs text-[12px] animate-fade-up">
           <div className="flex items-center gap-1.5 mb-3">
             <span className="h-2.5 w-2.5 rounded-full bg-destructive/60"></span>
             <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/60"></span>
@@ -95,7 +95,7 @@ export default function Hero() {
               {"\n"}
               {"  "}
               <span className="text-primary">return</span> ResponseEntity.ok(
-              <span className="text-accent">"available for projects"</span>
+              <span className="text-accent">"open to work"</span>
               );
               {"\n"}
               {"}"}

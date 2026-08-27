@@ -8,6 +8,7 @@ import Timeline from "../../components/Timeline/Timeline";
 import { getPortfilio } from "../../services/porfolioService";
 import ApiOffline from "../../components/ApiOffline/ApiOffline";
 import Stack from "../../components/Stack/Stack";
+import Footer from "../../components/Footer/Footer";
 
 export default function LandingPage() {
   const [apiOffline, setApiOffline] = useState();
@@ -41,6 +42,7 @@ export default function LandingPage() {
           <Timeline />
           <Project />
           <Contact />
+          <Footer/>
         </div>
       )}
     </>
