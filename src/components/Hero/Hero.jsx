@@ -31,7 +31,7 @@ export default function Hero() {
         <h1 className="text-center text-4xl md:text-7xl text-foreground font-semibold tracking-tight leading-[1.05] animate-fade-up">
           {hero?.name}
           <span className="text-center block text-3xl md:text-7xl text-gradient font-semibold mt-2 pb-2">
-            {hero.position  }
+            {hero?.position  }
           </span>
         </h1>
 
