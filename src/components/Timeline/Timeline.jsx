@@ -8,7 +8,7 @@ export default function Timeline() {
     getPortfilio().then((response) => {
       setTimelines(response.data.timelines);
     });
-  });
+  }, []);
   return (
     <section id="timeline" className="py-24">
       <div className="mx-auto max-w-6xl px-6">
