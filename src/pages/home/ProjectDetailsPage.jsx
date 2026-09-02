@@ -75,7 +75,8 @@ export default function ProjectDetailsPage() {
               <h2 className="text-xs font-bold uppercase tracking-widest text-primary my-6">
                 // Tecnologias Utilizadas
               </h2>
-              {project.skills?.map((skill) => (
+              <div className="flex gap-4">
+                {project.skills?.map((skill) => (
                 <span
                   key={skill.id}
                   className="w-fit px-2.5 py-1 text-sm font-mono rounded bg-surface text-muted-foreground border border-border"
@@ -83,6 +84,7 @@ export default function ProjectDetailsPage() {
                   {skill.name}{" "}
                 </span>
               ))}
+              </div>
             </div>
           </header>
 
