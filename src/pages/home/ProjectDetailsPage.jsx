@@ -79,7 +79,7 @@ export default function ProjectDetailsPage() {
                 {project.skills?.map((skill) => (
                 <span
                   key={skill.id}
-                  className="w-fit px-2.5 py-1 text-sm font-mono rounded bg-surface text-muted-foreground border border-border"
+                  className="w-fit px-2.5 py-1 text-sm font-mono rounded bg-surface text-muted-foreground border border-border truncate"
                 >
                   {skill.name}{" "}
                 </span>
