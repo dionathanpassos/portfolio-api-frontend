@@ -75,7 +75,7 @@ export default function ProjectDetailsPage() {
               <h2 className="text-xs font-bold uppercase tracking-widest text-primary my-6">
                 // Tecnologias Utilizadas
               </h2>
-              <div className="flex gap-4">
+              <div className="flex flex-wrap gap-2">
                 {project.skills?.map((skill) => (
                 <span
                   key={skill.id}
