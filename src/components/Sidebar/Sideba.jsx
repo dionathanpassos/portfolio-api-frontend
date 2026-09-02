@@ -16,7 +16,7 @@ export default function Sidebar() {
     { name: "Sobre", path: "/admin/sobre", icon: User },
     { name: "Stack", path: "/admin/stack", icon: Layers },
     { name: "Projetos", path: "/admin/projetos", icon: Folder },
-    { name: "Tineline", path: "/admin/timeline", icon: Timeline },
+    { name: "Timeline", path: "/admin/timeline", icon: Timeline },
     { name: "Contato", path: "/admin/contato", icon: Mail },
   ];
 

@@ -6,7 +6,8 @@ export default function MultiSelect({
   options,
   value,
   onChange,
-  placeholder = "Selecione..."
+  placeholder = "Selecione...",
+  label
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -20,8 +21,7 @@ export default function MultiSelect({
 
     document.addEventListener("mousedown", handleClickOutside);
 
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   function toggleOption(option) {
@@ -48,15 +48,14 @@ export default function MultiSelect({
 
   return (
     <div className="relative" ref={ref}>
+      <span className="text-xs text-muted-foreground mb-1.5">{label}</span>
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="flex min-h-11 w-full flex-wrap items-center gap-2 rounded-md border border-border bg-background/60 px-3 py-2 text-left"
+        className="flex min-h-11 w-full flex-wrap items-center gap-2 rounded-md border border-border bg-background/60 px-3 py-2 text-left focus:ring-1 focus:ring-primary focus:outline-none"
       >
         {value.length === 0 ? (
-          <span className="text-muted-foreground">
-            {placeholder}
-          </span>
+          <span className="text-muted-foreground">{placeholder}</span>
         ) : (
           value.map((id) => {
             const option = options.find((item) => item.id === id);
@@ -80,14 +79,11 @@ export default function MultiSelect({
           })
         )}
 
-        <ChevronDown
-          size={18}
-          className="ml-auto text-muted-foreground"
-        />
+        <ChevronDown size={18} className="ml-auto text-muted-foreground" />
       </button>
 
       {open && (
-        <div className="absolute z-50 mt-2 w-full rounded-md border border-border bg-surface shadow-lg">
+        <div className="absolute z-50 mt-2 w-full rounded-md border border-border bg-surface shadow-lg ">
           {options.map((option) => (
             <button
               key={option.id}
@@ -98,10 +94,7 @@ export default function MultiSelect({
               <span>{option.name}</span>
 
               {value.includes(option.id) && (
-                <Check
-                  size={16}
-                  className="text-primary"
-                />
+                <Check size={16} className="text-primary" />
               )}
             </button>
           ))}

@@ -18,7 +18,7 @@ export default function Hero() {
     }, []);
 
   return (
-    <section id="hero" className="relative overflow-hidden py-24 md:py-36 min-h-screen">
+    <section id="hero" className="relative overflow-hidden py-24 md:py-36 min-h-screen md:min-h-0 max-h-150 md:max-h-none">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-50 left-1/2 h-175 w-175 -translate-x-1/2 rounded-full bg-cyan-400/5 blur-3xl"></div>
       </div>

@@ -1,6 +1,5 @@
 import { Plus, Save, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getPortfilio } from "../../../services/porfolioService";
 import TitleSection from "../../../components/TitleSection/TitleSection";
 import CardSection from "../../../components/CardSection/CardSection";
 import {
@@ -10,6 +9,9 @@ import {
   updateTimeline,
 } from "../../../services/timelineService";
 import toast from "react-hot-toast";
+import Select from "../../../components/ui/Select/Select";
+import Input from "../../../components/ui/Input/Input";
+import Textarea from "../../../components/ui/Textarea/Textarea";
 
 export default function TimelinePage() {
   const [timelines, setTimelines] = useState([]);
@@ -26,6 +28,7 @@ export default function TimelinePage() {
   const [editingId, setEditingId] = useState(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({})
 
   console.log(form);
   useEffect(() => {
@@ -48,6 +51,7 @@ export default function TimelinePage() {
       current: false,
       featured: false,
     });
+    setFieldErrors({})
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,8 +98,9 @@ export default function TimelinePage() {
       setEditingId(null);
       setOpen(false);
     } catch (error) {
-      console.log(error);
-      toast.error(error.response?.data?.message);
+      const mensagemDoBackend = error.response?.data?.message || error.message;
+      toast.error(mensagemDoBackend || "Erro ao conectar com o servidor.");
+      setFieldErrors(error.response?.data.fieldErrors);
     }
   };
   const handleDelete = async (id) => {
@@ -118,6 +123,7 @@ export default function TimelinePage() {
       setLoading(false);
     }
   };
+  console.log(fieldErrors)
 
   return (
     <div className="space-y-6 animate-fade-up">
@@ -184,144 +190,88 @@ export default function TimelinePage() {
           >
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1.5">
-                    Tipo
-                  </span>
-
-                  <select
-                    name="type"
-                    value={form.type}
-                    onChange={handleChange}
-                    className="bg-background/60 rounded-md border border-border px-3 py-2 text-sm
-                    focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
-                  >
-                    <option value="EDUCATION">Formação</option>
-
-                    <option value="WORK">Experiência</option>
-
-                    <option value="PROJECT">Projeto</option>
-
-                    <option value="CERTIFICATION">Certificação</option>
-                  </select>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1.5">
-                    Título
-                  </span>
-
-                  <input
-                    type="text"
-                    name="title"
-                    value={form.title}
-                    onChange={handleChange}
-                    className="w-full border border-border bg-background/60 rounded-md px-3 py-2 text-sm
-                    focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col">
-                <span className="text-xs text-muted-foreground mb-1.5">
-                  Instituição/Empresa/Plataforma
-                </span>
-
-                <input
-                  type="text"
-                  name="subtitle"
-                  value={form.subtitle}
+                <Select
+                  label={"Tipo"}
+                  name={"type"}
+                  value={form.type}
                   onChange={handleChange}
-                  className="w-full border border-border bg-background/60 rounded-md px-3 py-2 text-sm
-                  focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
+                  options={[
+                    {value: "EDUCATION", label: "Formação"},
+                    {value: "WORK", label: "Experiência"},
+                    {value: "PROJECT", label: "Projeto"},
+                    {value: "CERTIFICATION", label: "Certificação"}
+                  ]}
+                  error={fieldErrors.type}
+                />
+                <Input
+                  label={"Título"}
+                  type={"text"}
+                  name={"title"}
+                  value={form.title}
+                  onChange={handleChange}
+                  error={fieldErrors.title}
                 />
               </div>
+              <Input
+                label={"Instituição/Empresa/Plataforma"}
+                type={"text"}
+                name={"subtitle"}
+                value={form.subtitle}
+                onChange={handleChange}
+                error={fieldErrors.subtitle}
+              />
 
-              <div className="flex flex-col">
-                <span className="text-xs text-muted-foreground mb-1.5">
-                  Descrição
-                </span>
-
-                <textarea
-                  name="description"
-                  value={form.description}
-                  onChange={handleChange}
-                  className="min-h-28 w-full border border-border bg-background/60 rounded-md px-3 py-2 text-sm
-                  focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
-                />
-              </div>
+              <Textarea
+                label={"Descrição"}
+                type={"text"}
+                name={"description"}
+                value={form.description}
+                onChange={handleChange}
+                error={fieldErrors.description}
+              />
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1.5">
-                    Data inicial
-                  </span>
-
-                  <input
-                    type="date"
-                    name="startDate"
-                    value={form.startDate}
-                    onChange={handleChange}
-                    className="w-full border border-border bg-background/60 rounded-md px-3 py-2 text-sm
-                    focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1.5">
-                    Data final
-                  </span>
-
-                  <input
-                    type="date"
-                    name="endDate"
-                    value={form.endDate}
-                    onChange={handleChange}
-                    disabled={form.current}
-                    className="w-full border border-border bg-background/60 rounded-md px-3 py-2 text-sm
-                    focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
-                  />
-                </div>
+                <Input
+                  label={"Data inicial"}
+                  type={"date"}
+                  name={"startDate"}
+                  value={form.startDate}
+                  onChange={handleChange}
+                  error={fieldErrors.startDate}
+                />
+                <Input
+                  label={"Data final"}
+                  type={"date"}
+                  name={"endDate"}
+                  value={form.endDate}
+                  onChange={handleChange}
+                  error={fieldErrors.endDate}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-6">
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1.5">
-                    Trabalho atual:
-                  </span>
-                  <select
-                    onChange={handleChange}
-                    value={String(form.current)}
-                    name="current"
-                    id=""
-                    className="bg-background/60 rounded-md border border-border px-2 py-2 text-foreground text-sm
-                    focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
-                  >
-                    <option value="true" className="">
-                      Sim
-                    </option>
-                    <option value="false">Não</option>
-                  </select>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1.5">
-                    Featured (exibir no portfolio)
-                  </span>
-                  <select
-                    onChange={handleChange}
-                    value={String(form.featured)}
-                    name="featured"
-                    id=""
-                    className="bg-background/60 rounded-md border border-border px-2 py-2 text-foreground text-sm
-                    focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
-                  >
-                    <option value="true" className="">
-                      Sim
-                    </option>
-                    <option value="false">Não</option>
-                  </select>
-                </div>
+                <Select
+                  label={"Trabalho atual:"}
+                  name={"current"}
+                  value={String(form.current)}
+                  onChange={handleChange}
+                  options={[
+                    {value: "true", label: "Sim"},
+                    {value: "false", label: "Não"},
+                  ]}
+                  error={fieldErrors.current}
+                />
+                <Select
+                  label={"Trabalho atual:"}
+                  value={String(form.featured)}
+                  name="featured"
+                  onChange={handleChange}
+                  options={[
+                    {value: "true", label: "Sim"},
+                    {value: "false", label: "Não"},
+                  ]}
+                  error={fieldErrors.current}
+                />
               </div>
 
               <div className="flex justify-end gap-4">

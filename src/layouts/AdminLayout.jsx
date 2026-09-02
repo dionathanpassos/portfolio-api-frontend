@@ -10,7 +10,7 @@ export default function AdminLayout() {
        
         <Sidebar />
 
-        <main className="w-full pt-17">
+        <main className="w-full pt-2">
           <Outlet />
         </main>
       </div>

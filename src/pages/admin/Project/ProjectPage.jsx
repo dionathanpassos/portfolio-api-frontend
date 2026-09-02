@@ -20,6 +20,9 @@ import {
 } from "../../../services/projectService";
 import toast from "react-hot-toast";
 import { getStacks } from "../../../services/stackService";
+import Input from "../../../components/ui/Input/Input";
+import Select from "../../../components/ui/Select/Select";
+import Textarea from "../../../components/ui/Textarea/Textarea";
 
 export default function ProjectPage() {
   const [open, setOpen] = useState(false);
@@ -27,6 +30,7 @@ export default function ProjectPage() {
   const [loading, setLoading] = useState(false);
   const [stacks, setStacks] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const [form, setForm] = useState({
     title: "",
@@ -51,20 +55,23 @@ export default function ProjectPage() {
       status: "IN_PROGRESS",
       skillsIds: [],
     });
+    setFieldErrors({});
+  };
+
+  const loadProjects = async () => {
+    try {
+      const projectsResponse = await getProjects();
+      const stacksResponse = await getStacks();
+      setProjects(projectsResponse.content);
+      setStacks(stacksResponse.content);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    async function loadProjects() {
-      const projectResponse = await getProjects();
-      const stackResponse = await getStacks();
-      setProjects(projectResponse.content);
-      setStacks(stackResponse.content);
-    }
-
     loadProjects();
   }, []);
-
-  console.log(projects)
 
   const handleEditing = (project) => {
     setForm({
@@ -131,7 +138,9 @@ export default function ProjectPage() {
       setEditingId(null);
       setOpen(false);
     } catch (error) {
-      toast.error(error.response.data.message);
+      const mensagemDoBackend = error.response?.data?.message || error.message;
+      toast.error(mensagemDoBackend || "Erro ao conectar com o servidor.");
+      setFieldErrors(error.response?.data.fieldErrors);
     } finally {
       setLoading(false);
     }
@@ -185,7 +194,7 @@ export default function ProjectPage() {
                     {project.status}
                   </span>
                 </div>
-                <p className="text-xs text-muted-foreground text-left mt-1.5">
+                <p className="text-xs text-muted-foreground text-left mt-1.5 line-clamp-2">
                   {project.description}
                 </p>
               </button>
@@ -200,135 +209,94 @@ export default function ProjectPage() {
             subtitle={"Detalhes do projeto."}
           >
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <div className="flex flex-col">
-                <span className="text-xs text-muted-foreground mb-1.5">
-                  Título
-                </span>
-                <input
-                  onChange={handleChange}
-                  name="title"
-                  type="text"
-                  value={form.title}
-                  className="w-full border border-border bg-background/60 rounded-md px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-colors"
-                ></input>
-              </div>
-              <div className="flex flex-col col-span-2">
-                <span className="text-xs text-muted-foreground mb-1.5">
-                  Slug
-                </span>
-                <input
-                  onChange={handleChange}
-                  name="slug"
-                  type="text"
-                  value={form.slug}
-                  className="w-full border border-border bg-background/60 rounded-md px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-colors"
-                ></input>
-              </div>
+              <Input
+                label={"Título"}
+                type={"text"}
+                name={"title"}
+                value={form.title}
+                onChange={handleChange}
+                error={fieldErrors.title}
+              />
+              <Input
+                label={"Slug"}
+                type={"text"}
+                name={"slug"}
+                value={form.slug}
+                onChange={handleChange}
+                error={fieldErrors.slug}
+              />
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1.5">
-                    Status
-                  </span>
-                  <select
-                    onChange={handleChange}
-                    value={form.status}
-                    name="status"
-                    id=""
-                    className="bg-background/60 rounded-md border border-border px-2 py-2 text-foreground text-sm focus:border-primary focus:outline-none"
-                  >
-                    <option value="IN_PROGRESS">IN_PROGRESS</option>
-                    <option value="COMPLETED">COMPLETED</option>
-                  </select>
-                </div>
-
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1.5">
-                    Featured (exibir no portfolio)
-                  </span>
-                  <select
-                    onChange={handleChange}
-                    value={String(form.featured)}
-                    name="featured"
-                    id=""
-                    className="bg-background/60 rounded-md border border-border px-2 py-2 text-foreground text-sm focus:border-primary focus:outline-none"
-                  >
-                    <option value="true" className="">
-                      Sim
-                    </option>
-                    <option value="false">Não</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex flex-col">
-                <span className="text-xs text-muted-foreground mb-1.5">
-                  Descrição
-                </span>
-                <textarea
+                <Select
+                  label={"Status"}
+                  name={"status"}
+                  value={form.status}
                   onChange={handleChange}
-                  name="description"
-                  value={form.description}
-                  className="min-h-20 w-full border border-border bg-background/60 
-              rounded-md px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 
-              focus:ring-primary/30 transition-colors"
-                ></textarea>
-              </div>
+                  error={fieldErrors.status}
+                  options={[
+                    { value: "IN_PROGRESS", label: "IN_PROGRESS" },
+                    { value: "COMPLETED", label: "COMPLETED" },
+                  ]}
+                />
 
-               <div className="flex flex-col">
-                <span className="text-xs text-muted-foreground mb-1.5">
-                  Desafios
-                </span>
-                <textarea
+                <Select
+                  label={"Featured (exibir no portfolio)"}
+                  name={"featured"}
+                  value={form.featured}
                   onChange={handleChange}
-                  name="challenges"
-                  value={form.challenges}
-                  className="min-h-20 w-full border border-border bg-background/60 
-                    rounded-md px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 
-                    focus:ring-primary/30 transition-colors"
-                ></textarea>
-              </div>
-
-              <div>
-                <span className="text-xs text-muted-foreground mb-1.5">
-                  Stack
-                </span>
-                <MultiSelect
-                  name="skillsIds"
-                  options={stacks}
-                  value={form.skillsIds}
-                  onChange={handleChange}
+                  error={fieldErrors.featured}
+                  options={[
+                    { value: "true", label: "Sim" },
+                    { value: "false", label: "Nao" },
+                  ]}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1.5 flex gap-2 items-center">
-                    <GithubIcon className="w-4" />
-                    Repositório
-                  </span>
-                  <input
-                    onChange={handleChange}
-                    value={form.repositoryUrl}
-                    name="repositoryUrl"
-                    type="text"
-                    className="w-full border border-border bg-background/60 rounded-md px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-colors"
-                  ></input>
-                </div>
+              <Textarea
+                label={"Descrição"}
+                name={"description"}
+                value={form.description}
+                onChange={handleChange}
+                error={fieldErrors.description}
+                className={"font-mono"}
+                height={"min-h-70"}
+              />
+              <Textarea
+                label={"Desafios"}
+                name={"challenges"}
+                value={form.challenges}
+                onChange={handleChange}
+                error={fieldErrors.challenges}
+              />
 
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1.5 flex gap-2 items-center">
-                    <ExternalLinkIcon className="w-4 h-4" />
-                    URL Pública
-                  </span>
-                  <input
-                    onChange={handleChange}
-                    value={form.demoUrl}
-                    name="demoUrl"
-                    type="text"
-                    className="w-full border border-border bg-background/60 rounded-md px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-colors"
-                  ></input>
-                </div>
+              <MultiSelect
+                label={"Stack"}
+                name="skillsIds"
+                options={stacks}
+                value={form.skillsIds}
+                onChange={handleChange}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <Input
+                  label={"Repositório"}
+                  name={"repositoryUrl"}
+                  type={"text"}
+                  value={form.repositoryUrl}
+                  onChange={handleChange}
+                  icon={<GithubIcon className="w-4 h-4" />}
+                  error={fieldErrors.repositoryUrl}
+                />
+                <Input
+                  label={"URL Pública"}
+                  name={"repositoryUrl"}
+                  type={"text"}
+                  value={form.demoUrl}
+                  onChange={handleChange}
+                  icon={<ExternalLinkIcon className="w-4 h-4" />}
+                  error={fieldErrors.demoUrl}
+                />
+                
               </div>
 
               <div className="flex justify-end gap-4">

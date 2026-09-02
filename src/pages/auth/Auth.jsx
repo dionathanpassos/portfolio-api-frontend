@@ -9,11 +9,13 @@ import toast from "react-hot-toast";
 export default function Auth() {
   const navigate = useNavigate();
   const [trigger, setTrigger] = useState("LOGIN");
+  const [fieldErrors, setFieldErrors] = useState({});
+
 
   const isLogin = trigger == "LOGIN";
 
   const [form, setForm] = useState({
-    name: "",
+    email: "",
     password: "",
   });
 
@@ -22,7 +24,6 @@ export default function Auth() {
     if (token) {
       navigate("/admin", { replace: true }); // 'replace: true' impede o usuário de voltar ao login pelo botão do navegador
     }
-
     const message = sessionStorage.getItem("auth-message");
 
     if (message) {
@@ -35,13 +36,13 @@ export default function Auth() {
     e.preventDefault();
     try {
       const data = await login(form);
-      console.log(data);
-
       localStorage.setItem("accessToken", data.accessToken);
 
       navigate("/admin");
     } catch (error) {
-      console.log(error);
+      const mensagemDoBackend = error.response?.data?.message || error.message;
+      toast.error(mensagemDoBackend || "Erro ao conectar com o servidor.");
+      setFieldErrors(error.response?.data.fieldErrors);
     }
   };
   const handleChange = (e) => {
@@ -94,6 +95,7 @@ export default function Auth() {
                 type={"email"}
                 name={"email"}
                 label={"Email"}
+                error={fieldErrors?.email}
               />
               <Input
                 onChange={handleChange}
@@ -101,6 +103,7 @@ export default function Auth() {
                 type={"password"}
                 name={"password"}
                 label={"Senha"}
+                error={fieldErrors?.password}
               />
 
               <div className="flex items-center justify-between text-xs">

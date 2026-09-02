@@ -2,6 +2,8 @@ import { ExternalLink, Info, X } from "lucide-react"; // Importei o ícone X par
 import GithubIcon from "../ui/GitHubIcon";
 import { useEffect, useState } from "react";
 import { getPortfilio } from "../../services/porfolioService";
+import ReactMarkdown from "react-markdown";
+import { useNavigate } from "react-router-dom";
 
 export default function Project() {
   const [projects, setProjects] = useState([]);
@@ -13,7 +15,6 @@ export default function Project() {
     });
   }, []);
 
-  console.log(projects);
   useEffect(() => {
     if (selectedProject) {
       document.body.style.overflow = "hidden";
@@ -24,6 +25,12 @@ export default function Project() {
       document.body.style.overflow = "";
     };
   }, [selectedProject]);
+
+  const navigate = useNavigate();
+
+  function handleOpenDetails(project) {
+    navigate(`/project/${project.slug}`);
+  }
 
   return (
     <section id="projects" className="overflow-hidden py-18">
@@ -92,7 +99,7 @@ export default function Project() {
                   </a>
                 )}
                 <button
-                  onClick={() => setSelectedProject(project)}
+                  onClick={() => handleOpenDetails(project)}
                   className="inline-flex gap-2 items-center text-primary bg-primary/10 text-xs font-medium px-3 py-2 rounded-md border border-primary/30 transition-colors hover:bg-primary/20 cursor-pointer"
                 >
                   <Info className="w-4 h-4" />
@@ -130,8 +137,13 @@ export default function Project() {
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-track-background scrollbar-thumb-border hover:scrollbar-thumb-primary/60">
+            <h4 className="text-xs font-mono uppercase tracking-wider text-foreground mb-3">
+                  Descricao
+                </h4>
               <p className="text-muted-foreground leading-relaxed text-sm whitespace-pre-line">
-                {selectedProject.description}
+                <ReactMarkdown>
+                  {selectedProject.description}
+                </ReactMarkdown>
               </p>
 
               <div className="py-2">
@@ -149,8 +161,6 @@ export default function Project() {
                   ))}
                 </div>
               </div>
-
-              
 
               {selectedProject.challenges && (
                 <div className="py-2">
