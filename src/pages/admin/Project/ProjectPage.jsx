@@ -289,7 +289,7 @@ export default function ProjectPage() {
                 />
                 <Input
                   label={"URL Pública"}
-                  name={"repositoryUrl"}
+                  name={"demoUrl"}
                   type={"text"}
                   value={form.demoUrl}
                   onChange={handleChange}
